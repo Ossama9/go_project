@@ -32,25 +32,25 @@ func (r *repository) Create(product Product) (Product, error) {
 }
 
 func (r *repository) Update(id int, InputProduct InputProduct) (Product, error) {
-	task, err := r.GetById(id)
+	product, err := r.GetById(id)
 	if err != nil {
-		return task, err
+		return product, err
 	}
 
-	task.Name = InputProduct.Name
-	task.Price = InputProduct.Price
+	product.Name = InputProduct.Name
+	product.Price = InputProduct.Price
 
-	err = r.db.Save(&task).Error
+	err = r.db.Save(&product).Error
 	if err != nil {
-		return task, err
+		return product, err
 	}
 
-	return task, nil
+	return product, nil
 }
 
 func (r *repository) Delete(id int) error {
-	task := &Product{ID: id}
-	tx := r.db.Delete(task)
+	product := &Product{Id: id}
+	tx := r.db.Delete(product)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -63,19 +63,19 @@ func (r *repository) Delete(id int) error {
 }
 
 func (r *repository) GetAll() ([]Product, error) {
-	var tasks []Product
-	err := r.db.Find(&tasks).Error
+	var products []Product
+	err := r.db.Find(&products).Error
 	if err != nil {
-		return tasks, err
+		return products, err
 	}
 
-	return tasks, nil
+	return products, nil
 }
 
 func (r *repository) GetById(id int) (Product, error) {
 	var product Product
 
-	err := r.db.Where(&Product{ID: id}).First(&product).Error
+	err := r.db.Where(&Product{Id: id}).First(&product).Error
 	if err != nil {
 		return product, err
 	}

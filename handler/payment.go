@@ -2,28 +2,22 @@ package handler
 
 import (
 	"net/http"
-	"project/product"
+	"project/payment"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Response struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+type paymentHandler struct {
+	paymentService payment.Service
 }
 
-type productHandler struct {
-	productService product.Service
+func NewPaymentHandler(paymentService payment.Service) *paymentHandler {
+	return &paymentHandler{paymentService}
 }
 
-func NewProductHandler(productService product.Service) *productHandler {
-	return &productHandler{productService}
-}
-
-func (th *productHandler) Create(c *gin.Context) {
-	var input product.InputProduct
+func (th *paymentHandler) Create(c *gin.Context) {
+	var input payment.InputPayment
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		response := &Response{
@@ -35,7 +29,7 @@ func (th *productHandler) Create(c *gin.Context) {
 		return
 	}
 
-	newProduct, err := th.productService.Create(input)
+	newPayment, err := th.paymentService.Create(input)
 	if err != nil {
 		response := &Response{
 			Success: false,
@@ -48,13 +42,13 @@ func (th *productHandler) Create(c *gin.Context) {
 
 	response := &Response{
 		Success: true,
-		Message: "New product created",
-		Data:    newProduct,
+		Message: "New payment created",
+		Data:    newPayment,
 	}
 	c.JSON(http.StatusCreated, response)
 }
-func (th *productHandler) GetAll(c *gin.Context) {
-	products, err := th.productService.GetAll()
+func (th *paymentHandler) GetAll(c *gin.Context) {
+	payments, err := th.paymentService.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, &Response{
 			Success: false,
@@ -66,11 +60,11 @@ func (th *productHandler) GetAll(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &Response{
 		Success: true,
-		Data:    products,
+		Data:    payments,
 	})
 }
 
-func (th *productHandler) GetById(c *gin.Context) {
+func (th *paymentHandler) GetById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &Response{
@@ -81,7 +75,7 @@ func (th *productHandler) GetById(c *gin.Context) {
 		return
 	}
 
-	product, err := th.productService.GetById(id)
+	payment, err := th.paymentService.GetById(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &Response{
 			Success: false,
@@ -93,11 +87,11 @@ func (th *productHandler) GetById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &Response{
 		Success: true,
-		Data:    product,
+		Data:    payment,
 	})
 }
 
-func (th *productHandler) Update(c *gin.Context) {
+func (th *paymentHandler) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &Response{
@@ -109,7 +103,7 @@ func (th *productHandler) Update(c *gin.Context) {
 	}
 
 	// Get json body
-	var input product.InputProduct
+	var input payment.InputPayment
 	err = c.ShouldBindJSON(&input)
 	if err != nil {
 		response := &Response{
@@ -121,7 +115,7 @@ func (th *productHandler) Update(c *gin.Context) {
 		return
 	}
 
-	uProduct, err := th.productService.Update(id, input)
+	uPayment, err := th.paymentService.Update(id, input)
 	if err != nil {
 		response := &Response{
 			Success: false,
@@ -134,13 +128,13 @@ func (th *productHandler) Update(c *gin.Context) {
 
 	response := &Response{
 		Success: true,
-		Message: "Product Updated",
-		Data:    uProduct,
+		Message: "New task created",
+		Data:    uPayment,
 	}
 	c.JSON(http.StatusCreated, response)
 }
 
-func (th *productHandler) Delete(c *gin.Context) {
+func (th *paymentHandler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &Response{
@@ -151,7 +145,7 @@ func (th *productHandler) Delete(c *gin.Context) {
 		return
 	}
 
-	err = th.productService.Delete(id)
+	err = th.paymentService.Delete(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &Response{
 			Success: false,

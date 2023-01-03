@@ -17,43 +17,42 @@ func NewService(r Repository) *service {
 }
 
 func (s *service) Create(input InputProduct) (Product, error) {
-	var task Product
-	task.Name = input.Name
-	task.Price = input.Price
-
-	newTask, err := s.repository.Create(task)
+	var product Product
+	product.Name = input.Name
+	product.Price = input.Price
+	newProduct, err := s.repository.Create(product)
 	if err != nil {
-		return task, err
+		return product, err
 	}
 
-	return newTask, nil
+	return newProduct, nil
 }
 
 func (s *service) GetAll() ([]Product, error) {
-	tasks, err := s.repository.GetAll()
+	products, err := s.repository.GetAll()
 	if err != nil {
-		return tasks, err
+		return products, err
 	}
 
-	return tasks, nil
+	return products, nil
 }
 
 func (s *service) GetById(id int) (Product, error) {
-	task, err := s.repository.GetById(id)
+	product, err := s.repository.GetById(id)
 	if err != nil {
-		return task, err
+		return product, err
 	}
 
-	return task, nil
+	return product, nil
 }
 
 func (s *service) Update(id int, input InputProduct) (Product, error) {
-	uTask, err := s.repository.Update(id, input)
+	uProduct, err := s.repository.Update(id, input)
 	if err != nil {
-		return uTask, err
+		return uProduct, err
 	}
 
-	return uTask, nil
+	return uProduct, nil
 }
 
 func (s *service) Delete(id int) error {
