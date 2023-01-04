@@ -108,7 +108,6 @@ func (th *productHandler) Update(c *gin.Context) {
 		return
 	}
 
-	// Get json body
 	var input product.InputProduct
 	err = c.ShouldBindJSON(&input)
 	if err != nil {
@@ -163,6 +162,6 @@ func (th *productHandler) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &Response{
 		Success: true,
-		Message: "Task successfully deleted",
+		Message: "Product successfully deleted",
 	})
 }
