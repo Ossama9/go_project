@@ -237,9 +237,6 @@ func (adapter *ginAdapter) GetPaymentById(c *gin.Context) {
 		Data:    payment,
 	})
 
-	c.JSON(200, gin.H{
-		"product": payment,
-	})
 }
 
 func (adapter *ginAdapter) GetAllPayment(c *gin.Context) {
